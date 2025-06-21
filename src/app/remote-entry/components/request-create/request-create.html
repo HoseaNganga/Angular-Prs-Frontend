@@ -1,0 +1,39 @@
+<div class="">
+  <div class="bg-gray-200 p-2 flex items-center gap-2 mb-4">
+    <span class="text-black font-semibold">Request-Create</span>
+    <button
+      mat-raised-button
+      color="primary"
+      class="!px-3.5 !py-1.5 !text-xs !min-w-0 !h-auto !leading-none text-[#005cbb] cursor-pointer"
+      (click)="routeRequestList()"
+    >
+      Return To List
+    </button>
+  </div>
+
+  <div class="userCreateForm p-2">
+    <form [formGroup]="requestForm" (ngSubmit)="handleSubmit()">
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Justification</mat-label>
+        <input matInput formControlName="justification" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Delivery Mode</mat-label>
+        <mat-select formControlName="deliveryMode">
+          <mat-option [value]="'Mail'"> Mail </mat-option>
+          <mat-option [value]="'pickUp'"> PickUp </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="text-center my-4">
+        <button mat-raised-button color="primary" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>

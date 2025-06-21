@@ -1,0 +1,71 @@
+<div class="">
+  <div class="bg-gray-200 p-2 flex items-center gap-2 mb-4">
+    <span class="text-black font-semibold">User-Detail</span>
+    <button
+      mat-raised-button
+      color="primary"
+      class="!px-3.5 !py-1.5 !text-xs !min-w-0 !h-auto !leading-none text-[#005cbb] cursor-pointer"
+      (click)="routeUserList()"
+    >
+      Return To List
+    </button>
+  </div>
+
+  <div class="userCreateForm p-2">
+    <form [formGroup]="userForm">
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>FirstName</mat-label>
+        <input matInput formControlName="firstname" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>LastName</mat-label>
+        <input matInput formControlName="lastname" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" />
+      </mat-form-field>
+
+      <mat-checkbox formControlName="isReviewer">Reviewer</mat-checkbox>
+      <hr />
+      <mat-checkbox formControlName="isAdmin">Admin</mat-checkbox>
+
+      <div class="my-4 flex items-center gap-1">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="handleEditDetails()"
+          type="button"
+        >
+          Edit
+        </button>
+        <button
+          mat-raised-button
+          color="danger"
+          [ngClass]="'bg-red-600! text-white! '"
+          type="submit"
+          (click)="handleDeleteUser()"
+        >
+          Delete
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

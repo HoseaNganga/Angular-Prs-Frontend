@@ -1,0 +1,60 @@
+<div class="">
+  <div class="bg-gray-200 p-2 flex items-center gap-2 mb-4">
+    <span class="text-black font-semibold">Requests-List</span>
+    <button
+      mat-raised-button
+      color="primary"
+      class="!px-3.5 !py-1.5 !text-xs !min-w-0 !h-auto !leading-none"
+      (click)="routeRequestCreate()"
+    >
+      +
+    </button>
+  </div>
+  <div class="w-full overflow-x-auto bg-white rounded-lg shadow-md p-4">
+    <table
+      class="min-w-full table-auto text-sm text-left text-gray-700 relative"
+    >
+      <thead class="bg-gray-100 text-xs uppercase text-gray-600">
+        <tr class="p-4">
+          @for(item of displayedColumns;track item ){
+          <th class="px-4 py-2">{{item}}</th>
+          }
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        @for(item of requestsList;track item; ){
+
+        <tr class="cursor-pointer hover:bg-gray-100">
+          <td class="px-4 py-2">{{item.user.firstname }}</td>
+          <td class="px-4 py-2">{{ item.description }}</td>
+          <td class="px-4 py-2">{{ item.justification }}</td>
+          <td class="px-4 py-2">{{ item.requestNumber}}</td>
+          <td class="px-4 py-2">{{ item.submittedDate}}</td>
+          <td class="px-4 py-2">{{ item.total}}</td>
+
+          <td class="px-4 py-2">{{item.status}}</td>
+
+          <td class="px-4 py-2">
+            <div class="flex items-center gap-2">
+              <button
+                (click)="routeRequestLine(item.id)"
+                class="cursor-pointer"
+              >
+                <mat-icon>description</mat-icon>
+              </button>
+
+              <button
+                (click)="routeRequestEdit(item.id)"
+                class="cursor-pointer"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+        }
+      </tbody>
+      <br />
+    </table>
+  </div>
+</div>

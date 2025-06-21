@@ -1,0 +1,79 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+  >
+    <div class="m-[7px]">
+      <img
+        src="assets/images/angular_gradient.png"
+        alt="logo"
+        width="50px"
+        height="30px"
+        style="object-fit: contain; margin: auto; cursor: pointer"
+      />
+    </div>
+    <hr class="text-blue-400 mb-2" />
+    <ul class="flex flex-col">
+      @for(item of navLinks; track item ){
+      <a
+        [routerLink]="item"
+        [routerLinkActive]="'active'"
+        class="text-center p-2 text-black"
+      >
+        <span
+          class="hover:bg-gray-200 hover:text-[#005cbb] rounded-md mt-2 mx-1 my-2 p-3"
+        >
+          {{ item | titlecase }}</span
+        >
+      </a>
+
+      <hr class="m-2 text-blue-400" />
+
+      }
+    </ul>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      @if (isHandset$ | async) {
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        matIconButton
+        (click)="drawer.toggle()"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      }
+      <span>Angular PRS</span>
+      <div class="absolute right-[10px]">
+        @if(userData){
+        <div class="flex items-center gap-1">
+          <span class="text-base!">Hello {{ userData.firstname }}</span>
+          <button
+            (click)="handleLogOut()"
+            mat-raised-button
+            color="primary"
+            class="!px-3.5 !py-1.5 !text-xs !min-w-0 !h-auto !leading-none"
+          >
+            LogOut
+          </button>
+        </div>
+        }@else {
+        <button
+          (click)="handleLogin()"
+          mat-raised-button
+          color="primary"
+          class="!px-3.5 !py-1.5 !text-xs !min-w-0 !h-auto !leading-none"
+        >
+          Login
+        </button>
+        }
+      </div>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
