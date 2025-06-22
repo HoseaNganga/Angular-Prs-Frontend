@@ -118,6 +118,20 @@ export class RequestDetail implements OnInit, OnDestroy {
       });
   }
 
+  handleSubmitReview() {
+    this.requestService
+      .submitRequestForReview(this.requestId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        complete: () => {
+          this.router.navigate(['/requests']);
+        },
+        error: (err) => {
+          alert(err.message || 'Failed To Submit Request For Review');
+        },
+      });
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

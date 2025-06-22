@@ -42,6 +42,14 @@
         </button>
         <button
           mat-raised-button
+          color="primary"
+          type="button"
+          (click)="handleSubmitReview()"
+        >
+          Submit Review
+        </button>
+        <button
+          mat-raised-button
           color="danger"
           [ngClass]="'bg-red-600! text-white! '"
           type="submit"

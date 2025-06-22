@@ -33,6 +33,12 @@ export class RequestService {
       .pipe(catchError(this.handleError));
   }
 
+  submitRequestForReview(id: number) {
+    return this.http
+      .put(`/api/requests/submit-review/${id}`, {})
+      .pipe(catchError(this.handleError));
+  }
+
   deleteRequestById(id: number) {
     return this.http
       .delete(`api/requests/${id}`)
@@ -51,7 +57,7 @@ export class RequestService {
       .pipe(catchError(this.handleError));
   }
 
-  approveReview(requestId: number, reviewerId: number|undefined) {
+  approveReview(requestId: number, reviewerId: number | undefined) {
     return this.http
       .put(`/api/requests/approve/${requestId}?reviewerId=${reviewerId}`, {})
       .pipe(catchError(this.handleError));
