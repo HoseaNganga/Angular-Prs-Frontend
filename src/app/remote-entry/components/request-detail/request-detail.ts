@@ -13,11 +13,14 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from '../../../services/user/user-service';
+
 import { RequestService } from '../../../services/request/request-service';
 import { Subject, takeUntil } from 'rxjs';
-import { User } from '../../../services/auth/model/auth.model';
+
 import { RequestInterface } from '../requests/models/request.model';
+import { LineItem } from '../request-line/model/request-line.model';
+import { ProductService } from '../../../services/product/product-service';
+import { ProductInterface } from '../products/models/product.model';
 
 @Component({
   selector: 'app-request-detail',
@@ -37,97 +40,107 @@ import { RequestInterface } from '../requests/models/request.model';
 export class RequestDetail implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
-  private readonly userService = inject(UserService);
   private readonly requestService = inject(RequestService);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly productService = inject(ProductService);
   requestForm!: FormGroup;
   private readonly destroy$ = new Subject<void>();
-  userList!: User;
-  requestId!: number;
+  productList!: ProductInterface[];
+  lineId!: number;
   requestData!: RequestInterface;
+  lineData!: LineItem;
 
   ngOnInit(): void {
     this.requestForm = this.fb.group({
-      description: ['', Validators.required],
-      justification: ['', Validators.required],
-      deliveryMode: ['', Validators.required],
-      user: ['', Validators.required],
+      quantity: [0, Validators.required],
+      product: [null, Validators.required],
     });
 
-    this.requestId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    this.loadRequestDetails();
+    this.lineId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    this.loadLineItemData();
   }
 
-  loadRequestDetails() {
+  loadLineItemData() {
     this.requestService
-      .getRequestById(this.requestId)
+      .getLineItemById(this.lineId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
-          this.requestData = res;
-          this.requestForm.patchValue(res);
+          this.lineData = res;
+          this.requestForm.patchValue({ quantity: res.quantity });
+          this.loadAllProducts();
         },
         error: (err) => {
-          alert(err.message || 'Unable To Fetch Request Details');
+          alert(err.message || 'Unable To Fetch Line Item Details');
+        },
+      });
+  }
+
+  loadAllProducts() {
+    this.productService
+      .getAllProducts()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res: ProductInterface[]) => {
+          this.productList = res;
+          if (this.lineData) {
+            const matchingProduct = this.productList.find(
+              (p) => p.id === this.lineData.product.id
+            );
+            if (matchingProduct) {
+              this.requestForm.patchValue({ product: matchingProduct });
+            }
+          }
+        },
+        error: (err) => {
+          alert(err.message || 'Unable To Fetch Product Details');
         },
       });
   }
 
   routeRequestList() {
-    this.router.navigate(['/requests']);
+    this.router.navigate([`/request/request-line/${this.lineData.request.id}`]);
   }
 
-  handleEditDetails() {
+  handleEdit() {
     if (this.requestForm.invalid) return;
 
-    const updatedRequest: RequestInterface = {
-      ...this.requestForm.value,
-      id: this.requestId,
-      status: this.requestData.status,
-      total: this.requestData.total,
-      submittedDate: this.requestData.submittedDate,
-      requestNumber: this.requestData.requestNumber,
-      rejectionReason: this.requestData.rejectionReason ?? null,
+    const updatedLineItem: LineItem = {
+      id: this.lineData.id,
+      quantity: this.requestForm.value.quantity,
+      product: this.requestForm.value.product,
+      request: this.lineData.request,
     };
 
     this.requestService
-      .editRequestById(this.requestId, updatedRequest)
+      .editLineItemById(updatedLineItem.id, updatedLineItem)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        complete: () => {
-          this.router.navigate(['/requests']);
-          this.requestForm.reset();
+        next: () => {
+          alert('Line item updated!');
+          this.router.navigate([
+            `/request/request-line/${this.lineData.request.id}`,
+          ]);
         },
         error: (err) => {
-          alert(err.message || 'Failed To Update Request!');
+          alert(err.message || 'Failed to update line item.');
         },
       });
   }
 
-  handleDeleteRequest() {
+  handleDelete() {
     this.requestService
-      .deleteRequestById(this.requestId)
+      .deleteLineItemById(this.lineData.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        complete: () => {
-          this.router.navigate(['/requests']);
+        next: () => {
+          alert('Line item deleted successfully.');
+          this.router.navigate([
+            `/request/request-line/${this.lineData.request.id}`,
+          ]);
         },
         error: (err) => {
-          alert(err.message || 'Failed To Delete Request');
-        },
-      });
-  }
-
-  handleSubmitReview() {
-    this.requestService
-      .submitRequestForReview(this.requestId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        complete: () => {
-          this.router.navigate(['/requests']);
-        },
-        error: (err) => {
-          alert(err.message || 'Failed To Submit Request For Review');
+          alert(err.message || 'Failed to delete line item.');
         },
       });
   }

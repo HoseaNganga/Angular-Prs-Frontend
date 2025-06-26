@@ -33,19 +33,9 @@ export class Review implements OnInit, OnDestroy {
   }
 
   ApproveRequest(id: number) {
-    this.requestService
-      .approveReview(id, this.reviewerId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        complete: () => {
-          alert(`Successful Approval `);
-          this.router.navigate(['/requests']);
-        },
-        error: (err) => {
-          alert(err.message || 'An error Occured during Approval. Try Again!');
-        },
-      });
+    this.router.navigate([`/request/review/${id}`]);
   }
+ 
 
   getAllReviews() {
     this.requestService

@@ -93,6 +93,13 @@ export const remoteRoutes: Routes = [
           ),
       },
       {
+        path: 'request/request-line/:id',
+        loadComponent: () =>
+          import('./components/request-line/request-line').then(
+            (m) => m.RequestLine
+          ),
+      },
+      {
         path: 'request-line/create/:id',
         loadComponent: () =>
           import('./components/requestline-create/requestline-create').then(
@@ -100,9 +107,24 @@ export const remoteRoutes: Routes = [
           ),
       },
       {
+        path: 'request/edit/:id',
+        loadComponent: () =>
+          import('./components/request-edit/request-edit').then(
+            (m) => m.RequestEdit
+          ),
+      },
+
+      {
         path: 'reviews',
         loadComponent: () =>
           import('./components/review/review').then((m) => m.Review),
+      },
+      {
+        path: 'request/review/:id',
+        loadComponent: () =>
+          import('./components/request-approval/request-approval').then(
+            (m) => m.RequestApproval
+          ),
       },
     ],
   },

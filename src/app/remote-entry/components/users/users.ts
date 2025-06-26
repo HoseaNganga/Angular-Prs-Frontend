@@ -39,10 +39,10 @@ export class Users implements OnInit, OnDestroy {
   }
 
   routeUserCreate() {
-    this.router.navigate(['/user/create']);
+    this.router.navigate(['user/create']);
   }
   routeUserEdit(id: number) {
-    this.router.navigate([`/user/details/${id}`]);
+    this.router.navigate([`user/details/${id}`]);
   }
 
   ngOnDestroy(): void {

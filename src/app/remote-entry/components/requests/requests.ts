@@ -42,11 +42,11 @@ export class Requests implements OnInit, OnDestroy {
     this.router.navigate(['/request/create']);
   }
   routeRequestEdit(id: number) {
-    this.router.navigate([`/request/details/${id}`]);
+    this.router.navigate([`/request/edit/${id}`]);
   }
 
   routeRequestLine(id: number) {
-    this.router.navigate([`request-line/create/${id}`]);
+    this.router.navigate([`/request/request-line/${id}`]);
   }
 
   ngOnDestroy(): void {

@@ -1,44 +1,33 @@
 <div class="">
   <div class="bg-gray-200 p-2 flex items-center gap-2 mb-4">
-    <span class="text-black font-semibold">Product-Detail</span>
+    <span class="text-black font-semibold">Request-Edit</span>
     <button
       mat-raised-button
       color="primary"
       class="!px-3.5 !py-1.5 !text-xs !min-w-0 !h-auto !leading-none text-[#005cbb] cursor-pointer"
-      (click)="routeProductList()"
+      (click)="routeRequestList()"
     >
       Return To List
     </button>
   </div>
 
   <div class="userCreateForm p-2">
-    <form [formGroup]="productForm">
+    <form [formGroup]="requestForm">
       <mat-form-field appearance="fill" class="form-field">
-        <mat-label>PartNumber</mat-label>
-        <input matInput formControlName="partNbr" />
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="form-field">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" />
+        <mat-label>Justification</mat-label>
+        <input matInput formControlName="justification" />
       </mat-form-field>
 
       <mat-form-field appearance="fill" class="form-field">
-        <mat-label>Price</mat-label>
-        <input matInput type="number" formControlName="price" />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="form-field">
-        <mat-label>PhotoPath</mat-label>
-        <input matInput formControlName="photoPath" />
-      </mat-form-field>
-
-      <mat-form-field appearance="fill" class="form-field">
-        <mat-label>Vendor</mat-label>
-        <mat-select formControlName="vendor">
-          <mat-option *ngFor="let vendor of vendorList" [value]="vendor.id">
-            {{ vendor.name }}
-          </mat-option>
+        <mat-label>Delivery Mode</mat-label>
+        <mat-select formControlName="deliveryMode">
+          <mat-option [value]="'Mail'"> Mail </mat-option>
+          <mat-option [value]="'pickUp'"> PickUp </mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -51,12 +40,13 @@
         >
           Edit
         </button>
+
         <button
           mat-raised-button
           color="danger"
           [ngClass]="'bg-red-600! text-white! '"
           type="submit"
-          (click)="handleDeleteProduct()"
+          (click)="handleDeleteRequest()"
         >
           Delete
         </button>

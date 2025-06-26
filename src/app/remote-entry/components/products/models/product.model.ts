@@ -8,7 +8,7 @@ export const displayedProductColumns: string[] = [
   'unit',
   'photoPath',
   'vendor',
-  'actions'
+  'actions',
 ];
 
 export interface ProductInterface {

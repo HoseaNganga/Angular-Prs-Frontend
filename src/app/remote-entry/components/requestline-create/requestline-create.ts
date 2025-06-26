@@ -71,7 +71,7 @@ export class RequestlineCreate implements OnInit {
   }
 
   routeRequestList() {
-    this.router.navigate(['/requests']);
+    this.router.navigate([`/request/request-line/${this.requestId}`]);
   }
 
   handleSubmit() {
@@ -92,7 +92,7 @@ export class RequestlineCreate implements OnInit {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         complete: () => {
-          this.router.navigate(['/requests']);
+          this.router.navigate([`/request/request-line/${this.requestId}`]);
           this.requestLineForm.reset();
         },
         error: (err) => {

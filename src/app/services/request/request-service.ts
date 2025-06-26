@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { RequestInterface } from '../../remote-entry/components/requests/models/request.model';
 import { catchError, Observable, throwError } from 'rxjs';
+import { LineItem } from '../../remote-entry/components/request-line/model/request-line.model';
 
 @Injectable({
   providedIn: 'root',
@@ -57,10 +58,47 @@ export class RequestService {
       .pipe(catchError(this.handleError));
   }
 
+  getAllLineItems() {
+    return this.http
+      .get<LineItem[]>('/api/requestLines')
+      .pipe(catchError(this.handleError));
+  }
+
+  getLineItemById(id: number) {
+    return this.http
+      .get<LineItem>(`/api/requestLines/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  editLineItemById(id: number, data: LineItem) {
+    return this.http
+      .put<LineItem>(`/api/requestLines/${id}`, data)
+      .pipe(catchError(this.handleError));
+  }
+  deleteLineItemById(id: number) {
+    return this.http
+      .delete(`/api/requestLines/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
   approveReview(requestId: number, reviewerId: number | undefined) {
     return this.http
       .put(`/api/requests/approve/${requestId}?reviewerId=${reviewerId}`, {})
       .pipe(catchError(this.handleError));
+  }
+
+  rejectRequest(
+    requestId: number,
+    reviewerId: number,
+    rejectionReason: string
+  ) {
+    const url = `/api/requests/reject/${requestId}`;
+    const params = {
+      reviewerId: reviewerId.toString(),
+      rejectionReason: rejectionReason,
+    };
+
+    return this.http.put(url, null, { params });
   }
 
   private handleError(error: any): Observable<never> {

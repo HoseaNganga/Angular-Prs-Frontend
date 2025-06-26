@@ -52,11 +52,26 @@ export class ProductDetail implements OnInit, OnDestroy {
       price: [0, Validators.required],
       unit: ['Each'],
       photoPath: ['', Validators.required],
-      vendor: ['', Validators.required],
+      vendor: [null, Validators.required],
     });
 
     this.productId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    this.loadProductDetails();
+    this.loadAllVendors();
+  }
+
+  loadAllVendors() {
+    this.vendorService
+      .getAllVendors()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (res) => {
+          this.vendorList = res;
+          this.loadProductDetails();
+        },
+        error: (err) => {
+          alert(err.message || 'Unable To Fetch Vendor List');
+        },
+      });
   }
 
   loadProductDetails() {
@@ -65,7 +80,14 @@ export class ProductDetail implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res) => {
-          this.productForm.patchValue(res);
+          this.productForm.patchValue({
+            partNbr: res.partNbr,
+            name: res.name,
+            price: res.price,
+            unit: res.unit,
+            photoPath: res.photoPath,
+            vendor: res.vendor?.id,
+          });
         },
         error: (err) => {
           alert(err.message || 'Unable To Fetch Product Details');
@@ -76,16 +98,28 @@ export class ProductDetail implements OnInit, OnDestroy {
   handleEditDetails() {
     if (this.productForm.invalid) return;
 
+    const formValue = this.productForm.value;
+
+    const selectedVendor = this.vendorList.find(
+      (v) => v.id === formValue.vendor
+    );
+
+    if (!selectedVendor) {
+      alert('Invalid vendor selected');
+      return;
+    }
+
     const updatedProduct: ProductInterface = {
-      ...this.productForm.value,
+      ...formValue,
       id: this.productId,
+      vendor: selectedVendor,
     };
 
     this.productService
       .editProductById(this.productId, updatedProduct)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.router.navigate(['/products']);
           this.productForm.reset();
         },
